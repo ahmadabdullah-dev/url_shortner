@@ -2,6 +2,7 @@ using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddBusiness(builder.Configuration);
 builder.Services.AddDataAccess(builder.Configuration);
 
 builder.Services.AddControllers();
@@ -17,6 +18,8 @@ if (app.Environment.IsDevelopment())
 await app.Services.SeedDataAsync();
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
