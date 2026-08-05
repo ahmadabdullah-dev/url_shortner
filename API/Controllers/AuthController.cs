@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
@@ -18,5 +19,13 @@ public class AuthController : ControllerBase
         var result = await _authService.LoginAsync(dto);
 
         return result.IsSuccess ? Ok(result) : Unauthorized(result);
+    }
+    [Authorize]
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout()
+    {
+        var result = await _authService.LogoutAsync();
+
+        return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 }
