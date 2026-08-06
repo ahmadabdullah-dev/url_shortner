@@ -20,4 +20,22 @@ public class UserController : ControllerBase
         var result = await _userService.GetCurrentUserAsync();
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
+    [HttpPost("request-current-email-update")]
+    public async Task<IActionResult> RequestUpdateCurrentEmail(RequestUpdateEmailDto dto)
+    {
+        var result = await _userService.RequestUpdateCurrentEmailAsync(dto);
+        return result.IsSuccess ? Ok(result) : BadRequest(result);
+    }
+    [HttpPatch("current-email")]
+    public async Task<IActionResult> UpdateCurrentEmail(UpdateEmailDto dto)
+    {
+        var result = await _userService.UpdateEmailAsync(dto);
+        return result.IsSuccess ? Ok(result) : BadRequest(result);
+    }
+    [HttpPost("resend-current-email-update-confirmation-code")]
+    public async Task<IActionResult> ResendUpdateEmailConfirmationCode()
+    {
+        var result = await _userService.ResendUpdateEmailConfirmationCodeAsync();
+        return result.IsSuccess ? Ok(result) : BadRequest(result);
+    }
 }

@@ -18,3 +18,11 @@ public class UserDto
     public string Role { get; set; } = null!;
    
 }
+public class RequestUpdateEmailDto
+{
+    public required string NewEmail { get; set; }
+}
+public class UpdateEmailDto
+{
+    public required string Code { get; set; }
+}
