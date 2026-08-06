@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Business.Services;
 
@@ -8,16 +9,19 @@ public class AuthService : IAuthService
     private readonly UserManager<AppUser> _userManager;
     private readonly IEmailService _emailService;
     private readonly IUserService _userService;
+    private readonly ApplicationDbContext _dbContext;
     public AuthService(SignInManager<AppUser> signInManager,
         UserManager<AppUser> userManager,
         IEmailService emailService,
-        IUserService userService)
+        IUserService userService,
+        ApplicationDbContext dbContext)
     {
         _signInManager = signInManager;
         _userManager = userManager;
         _emailService = emailService;
         _userService = userService;
-    }
+        _dbContext = dbContext;
+    }   
     public async Task<Result<string>> LoginAsync(LoginDto dto)
     {
         var user = await _userManager.FindByEmailAsync(dto.Email.ToLower());
@@ -134,5 +138,48 @@ public class AuthService : IAuthService
 
         return Result<string>.Success("Email Confirmation code has been resent successfully");
 
+    }
+    public async Task<Result<string>> ForgetPasswordAsync(ForgetPasswordDto dto)
+    {
+        var user = await _userManager.FindByEmailAsync(dto.Email);
+
+        if (user == null)
+            return Result<string>.Failure("User not found");
+
+        await _emailService.SendCodeAsync(user, "Reset Password", EmailPurposes.PASSWORD_RESET);
+
+        return Result<string>.Success("Reset code sent successfully.");
+    }
+    public async Task<Result<string>> ResetPasswordAsync(ResetPasswordDto dto)
+    {
+        var user = await _userManager.FindByEmailAsync(dto.Email);
+
+        if (user == null)
+            return Result<string>.Failure("Invalid or expired code.");
+
+        var isValid = await _userManager.VerifyUserTokenAsync(
+            user, TokenOptions.DefaultEmailProvider, EmailPurposes.PASSWORD_RESET, dto.Code);
+
+        if (!isValid)
+            return Result<string>.Failure("Invalid or expired code.");
+
+        await using var transaction = await _dbContext.Database.BeginTransactionAsync();
+
+        var removePasswordResult = await _userManager.RemovePasswordAsync(user);
+
+        if (!removePasswordResult.Succeeded)
+            return Result<string>.Failure(ServiceHelper.GetFirstError(removePasswordResult));
+
+        var addPasswordResult = await _userManager.AddPasswordAsync(user, dto.NewPassword);
+
+        if (!addPasswordResult.Succeeded)
+            return Result<string>.Failure(ServiceHelper.GetFirstError(addPasswordResult));
+
+        await _userManager.ResetAccessFailedCountAsync(user);
+        await _userManager.SetLockoutEndDateAsync(user, null);
+
+        await transaction.CommitAsync();
+
+        return Result<string>.Success("Password reset successfully.");
     }
 }

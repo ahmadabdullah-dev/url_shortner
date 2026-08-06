@@ -7,5 +7,6 @@ public interface IAuthService
     Task<Result<string>> RegisterAsync(RegisterDto dto);
     Task<Result<string>> ConfirmEmailAsync(ConfirmEmailDto dto);
     Task<Result<string>> ResendEmailConfirmationCodeAsync();
-
+    Task<Result<string>> ForgetPasswordAsync(ForgetPasswordDto dto);
+    Task<Result<string>> ResetPasswordAsync(ResetPasswordDto dto);
 }

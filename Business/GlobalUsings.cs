@@ -4,3 +4,4 @@ global using Business.Common;
 global using Business.Dtos;
 global using DataAccess.Entities.Identity;
 global using Business.Common.Configurations;
+global using DataAccess;
