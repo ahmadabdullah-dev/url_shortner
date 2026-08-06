@@ -17,8 +17,14 @@ export const useAuth = () => {
       navigate("/dashboard");
     },
   });
-
+ const registerAsync = useMutation({
+      mutationFn: async (creds: RegisterDto) => {
+            const response = await agent.post("/auth/register",creds)
+            return response.data;
+        }
+    }) 
   return {
     loginAsync,
+    registerAsync
   };
 };

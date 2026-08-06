@@ -3,6 +3,7 @@ import App from "../App";
 import ErrorPage from "../../features/errors/ErrorPage";
 import NotFound from "../../features/errors/NotFound";
 import LoginForm from "../../features/auth/LoginForm";
+import RegisterForm from "../../features/auth/RegisterForm";
 
 
 export const routes = createBrowserRouter([
@@ -13,6 +14,7 @@ export const routes = createBrowserRouter([
     children: [
       { index: true, element: <Navigate to="/" replace /> },
       { path: "login", element: <LoginForm /> },
+      { path: "register", element: <RegisterForm /> },
 
     ],
   },

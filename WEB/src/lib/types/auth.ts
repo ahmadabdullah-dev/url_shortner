@@ -3,3 +3,8 @@ export type LoginDto = {
   password: string,
   isPersistence: boolean
 }
+export type RegisterDto = {
+  username: string,
+  email: string,
+  password: string,
+}
