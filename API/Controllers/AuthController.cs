@@ -35,4 +35,19 @@ public class AuthController : ControllerBase
 
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
+    [Authorize]
+    [HttpPatch("confirm-email")]
+    public async Task<IActionResult> ConfirmEmail(ConfirmEmailDto dto)
+    {
+        var result = await _authService.ConfirmEmailAsync(dto);
+
+        return result.IsSuccess ? Ok(result) : BadRequest(result);
+    }
+    [Authorize]
+    [HttpPost("resend-email-confirmation-code")]
+    public async Task<IActionResult> ResendEmailConfirmationCode()
+    {
+        var result = await _authService.ResendEmailConfirmationCodeAsync();
+        return result.IsSuccess ? Ok(result) : BadRequest(result);
+    }
 }
