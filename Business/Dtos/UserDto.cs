@@ -26,3 +26,11 @@ public class UpdateEmailDto
 {
     public required string Code { get; set; }
 }
+public class UpdateCurrentUserDto
+{
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
+    public string? PhoneNumber { get; set; }
+    public string? Country { get; set; }
+    public DateOnly? BirthDate { get; set; }
+}

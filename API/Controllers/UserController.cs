@@ -38,4 +38,10 @@ public class UserController : ControllerBase
         var result = await _userService.ResendUpdateEmailConfirmationCodeAsync();
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
+    [HttpPut("current")]
+    public async Task<IActionResult> UpdateCurrentUser(UpdateCurrentUserDto dto)
+    {
+        var result = await _userService.UpdateCurrentUserAsync(dto);
+        return result.IsSuccess ? Ok(result) : BadRequest(result);
+    }
 }
