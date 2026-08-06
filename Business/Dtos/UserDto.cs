@@ -34,3 +34,7 @@ public class UpdateCurrentUserDto
     public string? Country { get; set; }
     public DateOnly? BirthDate { get; set; }
 }
+public class UpdateUserNameDto
+{
+    public required string NewUserName { get; set; }
+}

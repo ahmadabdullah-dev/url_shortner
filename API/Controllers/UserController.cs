@@ -44,4 +44,10 @@ public class UserController : ControllerBase
         var result = await _userService.UpdateCurrentUserAsync(dto);
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
+    [HttpPatch("current-username")]
+    public async Task<IActionResult> UpdateCurrentUserName(UpdateUserNameDto dto)
+    {
+        var result = await _userService.UpdateUserNameAsync(dto);
+        return result.IsSuccess ? Ok(result) : BadRequest(result);
+    }
 }
